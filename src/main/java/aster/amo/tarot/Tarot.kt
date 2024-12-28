@@ -28,8 +28,8 @@ class Tarot : ModInitializer {
         val MINI_MESSAGE: MiniMessage = MiniMessage.miniMessage()
 
         @JvmStatic
-        fun asResource(path: String): ResourceLocation {
-            return ResourceLocation.fromNamespaceAndPath(MOD_ID, path)
+        fun asResource(path: String): ResourceLocation? {
+            return ResourceLocation.tryBuild(MOD_ID, path)
         }
     }
 

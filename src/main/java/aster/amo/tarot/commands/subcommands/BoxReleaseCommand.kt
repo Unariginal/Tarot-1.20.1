@@ -1,6 +1,5 @@
 package aster.amo.tarot.commands.subcommands
 
-import aster.amo.ceremony.utils.parseToNative
 import aster.amo.tarot.commands.box.BoxUtils
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
@@ -11,6 +10,7 @@ import me.lucko.fabric.api.permissions.v0.Permissions
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickCallback
 import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.minecraft.commands.CommandSourceStack
@@ -26,7 +26,7 @@ class BoxReleaseCommand : SubCommand {
                     val player = ctx.source.playerOrException
                     player.sendMessage(Component.text(" ℹ ").color(TextColor.fromHexString("#ff0000")).append(Component.text("Are you sure? Click here to confirm").color(TextColor.fromHexString("#ff9900")).clickEvent(ClickEvent.callback(ClickCallback { _ ->
                         BoxUtils.releaseBox(player, box-1)
-                        player.sendSystemMessage("<green>Box $box released!".parseToNative())
+                        player.sendMessage(Component.text("Box $box released!").color(NamedTextColor.GREEN))
                     })).decorate(TextDecoration.UNDERLINED)))
                     1
                 }

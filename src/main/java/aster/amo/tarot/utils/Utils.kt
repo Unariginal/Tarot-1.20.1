@@ -89,7 +89,7 @@ object Utils {
         @Throws(JsonParseException::class)
         override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): T? {
             return try {
-                codec.decode(JsonOps.INSTANCE, json).getOrThrow() { return@getOrThrow Exception() }.first
+                codec.decode(JsonOps.INSTANCE, json).getOrThrow(false) { return@getOrThrow }.first
             } catch (e: Throwable) {
                 printError("There was an error while deserializing a Codec: $codec")
                 null
@@ -99,7 +99,7 @@ object Utils {
         override fun serialize(src: T?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
             return try {
                 if (src != null)
-                    codec.encodeStart(JsonOps.INSTANCE, src).getOrThrow() { return@getOrThrow Exception() }
+                    codec.encodeStart(JsonOps.INSTANCE, src).getOrThrow(false) { return@getOrThrow }
                 else
                     JsonNull.INSTANCE
             } catch (e: Throwable) {

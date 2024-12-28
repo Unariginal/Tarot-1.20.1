@@ -77,7 +77,7 @@ repositories {
         name = "Ladysnake Mods"
     }
     maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://maven.impactdev.net/repository/development/")
+    maven("https://maven.impactdev.net/repository/development")
     exclusiveContent {
         forRepository {
             maven {
@@ -92,63 +92,62 @@ repositories {
 }
 
 dependencies {
+    val ccaVersion = property("cca_version") as String
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21:${project.properties["parchment_version"]}")
+        parchment("org.parchmentmc.data:parchment-1.20.1:${project.properties["parchment_version"]}")
     })
 
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"].toString()}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"].toString()}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"].toString()}")
 
-    modImplementation(include("net.kyori:adventure-platform-fabric:5.14.1") {
+    modImplementation(include("net.kyori:adventure-platform-fabric:5.9.0") {
         exclude("com.google.code.gson")
         exclude("ca.stellardrift", "colonel")
         exclude("net.fabricmc")
     })
-    modCompileOnly("net.kyori:adventure-platform-mod-shared-fabric-repack:6.0.0")
-    include("org.ladysnake.cardinal-components-api:cardinal-components-base:6.1.1")?.let {
-        modImplementation(it)
-    }
-    include("org.ladysnake.cardinal-components-api:cardinal-components-entity:6.1.1")?.let {
-        modImplementation(it)
-    }
+    //modCompileOnly("net.kyori:adventure-platform-mod-shared-fabric-repack:5.9.0")
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$ccaVersion")
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:$ccaVersion")
 
     // PermissionsAPI
-    modImplementation("me.lucko:fabric-permissions-api:0.3.1")
+    modImplementation(include("me.lucko:fabric-permissions-api:0.3.1") {
+    })
 
-    include("eu.pb4:sgui:1.6.1+1.21.1")?.let { modImplementation(it) }
+    include("eu.pb4:sgui:1.2.2+1.20")?.let { modImplementation(it) }
 
-    include("xyz.nucleoid:stimuli:0.4.12+1.21")?.let { modImplementation(it) }
+    include("xyz.nucleoid:stimuli:0.4.8+1.20.1")?.let { modImplementation(it) }
 
     modImplementation("io.github.miniplaceholders:miniplaceholders-api:2.2.3")
     modImplementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
 
 
-    modImplementation("net.impactdev.impactor.api:economy:5.3.0-SNAPSHOT")
-    modImplementation("net.impactdev.impactor.api:text:5.3.0-SNAPSHOT")
+    implementation("net.impactdev.impactor.api:economy:5.2.0-SNAPSHOT")
+    implementation("net.impactdev.impactor.api:text:5.2.1")
+    modImplementation("net.kyori:event-api:5.0.0-SNAPSHOT")
 
-    modImplementation("com.cobblemon:fabric:1.6.0+1.21.1-SNAPSHOT")
+    modImplementation("com.cobblemon:fabric:1.5.2+1.20.1")
 
     // Database Storage
-    implementation(include("org.mongodb:mongodb-driver-sync:4.11.0")!!)
-    implementation(include("org.mongodb:mongodb-driver-core:4.11.0")!!)
-    implementation(include("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")!!)
-    implementation(include("org.mongodb:bson:4.11.0")!!)
-    implementation(include("org.mongodb:bson-kotlinx:4.11.0")!!)
+    //implementation(include("org.mongodb:mongodb-driver-sync:4.11.0")!!)
+    //implementation(include("org.mongodb:mongodb-driver-core:4.11.0")!!)
+    //implementation(include("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")!!)
+    //implementation(include("org.mongodb:bson:4.11.0")!!)
+    //implementation(include("org.mongodb:bson-kotlinx:4.11.0")!!)
 
 
     modImplementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    include("aster.amo.ceremony:Ceremony:2.0.1")?.let {
-        modImplementation(it)
-    }
-    include("com.github.shynixn.mccoroutine:mccoroutine-fabric-api:2.20.0")?.let {
-        implementation(it)
-    }
-    include("com.github.shynixn.mccoroutine:mccoroutine-fabric-core:2.20.0")?.let {
-        implementation(it)
-    }
+    //include("aster.amo.ceremony:Ceremony:2.0.1")?.let {
+    //    modImplementation(it)
+    //}
+    //include("com.github.shynixn.mccoroutine:mccoroutine-fabric-api:2.20.0")?.let {
+    //    implementation(it)
+    //}
+    //include("com.github.shynixn.mccoroutine:mccoroutine-fabric-core:2.20.0")?.let {
+    //    implementation(it)
+    //}
 //
 //    include("maven.modrinth:customnametags:0.3.0+1.21.3")?.let {
 //        modImplementation(it)

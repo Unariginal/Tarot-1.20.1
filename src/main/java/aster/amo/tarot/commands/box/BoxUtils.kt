@@ -1,7 +1,8 @@
 package aster.amo.tarot.commands.box
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.storage.pc.PCPosition
+import com.cobblemon.mod.common.api.storage.pc.PCBox
+import com.cobblemon.mod.common.api.storage.pc.PCPosition;
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.swap
@@ -15,7 +16,8 @@ import java.util.concurrent.CompletableFuture
 
 object BoxUtils {
     fun releaseBox(player: ServerPlayer, box: Int) {
-        val pc = Cobblemon.storage.getPC(player) ?: return
+        val pc = Cobblemon.storage.getPC(player.uuid) ?: return
+
         pc.boxes[box].let { boxInstance ->
             val pokemonToRemove: MutableList<Pokemon> = mutableListOf()
             boxInstance.forEach { pokemon ->
@@ -28,17 +30,27 @@ object BoxUtils {
     }
 
     fun swapBoxes(player: ServerPlayer, box1: Int, box2: Int) {
-        val pc = Cobblemon.storage.getPC(player) ?: return
-        pc.boxes.swap(box1, box2)
+        val pc = Cobblemon.storage.getPC(player.uuid) ?: return
+        val box1Pokemon = pc.boxes[box1].toMutableList()
+        val box2Pokemon = pc.boxes[box2].toMutableList()
+        releaseBox(player, box1)
+        releaseBox(player, box2)
+        for (i in box1Pokemon.indices) {
+            pc.set(PCPosition(box2,i), box1Pokemon[i])
+        }
+
+        for (i in box2Pokemon.indices) {
+            pc.set(PCPosition(box1,i), box2Pokemon[i])
+        }
         pc.sendTo(player)
     }
 
     fun sortBox(player: ServerPlayer, box: Int, sortType: SortType) {
-        val pc = Cobblemon.storage.getPC(player) ?: return
+        val pc = Cobblemon.storage.getPC(player.uuid) ?: return
         val pokemon = pc.boxes[box].toMutableList().sortedWith(sortType.comparator)
         releaseBox(player, box)
         for (i in pokemon.indices) {
-            pc.set(PCPosition(box, i), pokemon[i])
+            pc.set(PCPosition(box,i), pokemon[i])
         }
         pc.sendTo(player)
     }
